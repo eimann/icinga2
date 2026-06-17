@@ -174,8 +174,7 @@ void ConfigStagesHandler::HandlePost(const HttpApiRequest& request, HttpApiRespo
 		ConfigPackageUtility::AsyncTryActivateStage(packageName, stageName, activate, reload, resetPackageUpdates);
 	} catch (const std::exception& ex) {
 		return HttpUtility::SendJsonError(response, params, 500,
-			"Stage creation failed.",
-			DiagnosticInformation(ex));
+			"Stage creation failed.", std::current_exception());
 	}
 
 
@@ -237,7 +236,7 @@ void ConfigStagesHandler::HandleDelete(const HttpApiRequest& request, HttpApiRes
 	} catch (const std::exception& ex) {
 		return HttpUtility::SendJsonError(response, params, 500,
 			"Failed to delete stage '" + stageName + "' in package '" + packageName + "'.",
-			DiagnosticInformation(ex));
+			std::current_exception());
 	}
 
 	Dictionary::Ptr result1 = new Dictionary({

@@ -438,7 +438,7 @@ void ProcessRequest(
 			throw;
 		}
 
-		HttpUtility::SendJsonError(response, request.Params(), 500, "Unhandled exception", DiagnosticInformation(ex));
+		HttpUtility::SendJsonError(response, request.Params(), 500, "Unhandled exception", std::current_exception());
 	}
 
 	response.Flush(yc);

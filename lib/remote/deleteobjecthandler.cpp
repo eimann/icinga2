@@ -60,8 +60,7 @@ bool DeleteObjectHandler::HandleRequest(
 		objs = FilterUtility::GetFilterTargets(qd, params, user);
 	} catch (const std::exception& ex) {
 		HttpUtility::SendJsonError(response, params, 404,
-			"No objects found.",
-			DiagnosticInformation(ex));
+			"No objects found.", std::current_exception());
 		return true;
 	}
 

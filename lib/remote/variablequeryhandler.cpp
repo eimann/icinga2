@@ -93,8 +93,7 @@ bool VariableQueryHandler::HandleRequest(
 		objs = FilterUtility::GetFilterTargets(qd, params, user, "variable");
 	} catch (const std::exception& ex) {
 		HttpUtility::SendJsonError(response, params, 404,
-			"No variables found.",
-			DiagnosticInformation(ex));
+			"No variables found.", std::current_exception());
 		return true;
 	}
 

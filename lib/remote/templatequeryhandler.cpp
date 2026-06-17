@@ -121,8 +121,7 @@ bool TemplateQueryHandler::HandleRequest(
 		objs = FilterUtility::GetFilterTargets(qd, params, user, "tmpl");
 	} catch (const std::exception& ex) {
 		HttpUtility::SendJsonError(response, params, 404,
-			"No templates found.",
-			DiagnosticInformation(ex));
+			"No templates found.", std::current_exception());
 		return true;
 	}
 
