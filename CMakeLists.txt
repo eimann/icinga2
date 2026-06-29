@@ -183,6 +183,10 @@ add_definitions(-DBOOST_FILESYSTEM_NO_DEPRECATED)
 # Required for Boost v1.74+
 add_definitions(-DBOOST_ASIO_USE_TS_EXECUTOR_AS_DEFAULT)
 
+# Boost.Asio's C++20 concept checks (completion_token_for / initiation_archetype)
+# have a hard error with certain socket types; disable them and fall back to SFINAE.
+add_definitions(-DBOOST_ASIO_DISABLE_CONCEPTS)
+
 link_directories(${Boost_LIBRARY_DIRS})
 include_directories(SYSTEM ${Boost_INCLUDE_DIRS})
 
