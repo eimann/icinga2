@@ -25,11 +25,11 @@ case "$DISTRO" in
       {libedit,mariadb,ncurses,openssl,postgresql,systemd}-devel
 
     yum install -y bzip2 gcc-c++ tar wget
-    wget https://archives.boost.io/release/1.69.0/source/boost_1_69_0.tar.bz2
-    tar -xjf boost_1_69_0.tar.bz2
+    wget https://archives.boost.io/release/1.74.0/source/boost_1_74_0.tar.bz2
+    tar -xjf boost_1_74_0.tar.bz2
 
     (
-      cd boost_1_69_0
+      cd boost_1_74_0
       ./bootstrap.sh --with-libraries=context,coroutine,date_time,filesystem,iostreams,program_options,regex,system,test,thread
       ./b2 define=BOOST_COROUTINES_NO_DEPRECATION_WARNING
     )
@@ -37,10 +37,10 @@ case "$DISTRO" in
     ln -vs /usr/bin/cmake3 /usr/local/bin/cmake
     ln -vs /usr/bin/ninja-build /usr/local/bin/ninja
 
-    CMAKE_OPTS+=(-DBOOST_{INCLUDEDIR=/boost_1_69_0,LIBRARYDIR=/boost_1_69_0/stage/lib})
+    CMAKE_OPTS+=(-DBOOST_{INCLUDEDIR=/boost_1_74_0,LIBRARYDIR=/boost_1_74_0/stage/lib})
     CMAKE_OPTS+=(-DCMAKE_CXX_COMPILER=gcc10-g++ -DCMAKE_C_COMPILER=gcc10-gcc)
 
-    export LD_LIBRARY_PATH=/boost_1_69_0/stage/lib
+    export LD_LIBRARY_PATH=/boost_1_74_0/stage/lib
     ;;
 
   amazonlinux:20*)
@@ -66,6 +66,19 @@ case "$DISTRO" in
       libboost_{context,coroutine,filesystem,iostreams,program_options,regex,system,test,thread}-devel
 
     CMAKE_OPTS+=(-DCMAKE_CXX_COMPILER=g++-14 -DCMAKE_C_COMPILER=gcc-14)
+
+    zypper in -y --allow-downgrade bzip2 gcc-c++ wget
+    wget https://archives.boost.io/release/1.74.0/source/boost_1_74_0.tar.bz2
+    tar -xjf boost_1_74_0.tar.bz2
+
+    (
+      cd boost_1_74_0
+      ./bootstrap.sh --with-libraries=context,coroutine,date_time,filesystem,iostreams,program_options,regex,system,test,thread
+      ./b2 define=BOOST_COROUTINES_NO_DEPRECATION_WARNING
+    )
+
+    CMAKE_OPTS+=(-DBOOST_{INCLUDEDIR=/boost_1_74_0,LIBRARYDIR=/boost_1_74_0/stage/lib})
+    export LD_LIBRARY_PATH=/boost_1_74_0/stage/lib
     ;;
 
   *suse*)
@@ -88,6 +101,23 @@ case "$DISTRO" in
 
     dnf install -y bison ccache cmake gcc-c++ flex ninja-build redhat-rpm-config \
       {boost,bzip2,libedit,mariadb,ncurses,openssl,postgresql,systemd,xz,libzstd}-devel
+
+    case "$DISTRO" in
+      *:8)
+        yum install -y bzip2 tar wget
+        wget https://archives.boost.io/release/1.74.0/source/boost_1_74_0.tar.bz2
+        tar -xjf boost_1_74_0.tar.bz2
+
+        (
+          cd boost_1_74_0
+          ./bootstrap.sh --with-libraries=context,coroutine,date_time,filesystem,iostreams,program_options,regex,system,test,thread
+          ./b2 define=BOOST_COROUTINES_NO_DEPRECATION_WARNING
+        )
+
+        CMAKE_OPTS+=(-DBOOST_{INCLUDEDIR=/boost_1_74_0,LIBRARYDIR=/boost_1_74_0/stage/lib})
+        export LD_LIBRARY_PATH=/boost_1_74_0/stage/lib
+        ;;
+    esac
     ;;
 esac
 
